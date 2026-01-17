@@ -69,6 +69,29 @@ const resolvers: Resolvers = {
 
         return matchesId && matchesTitle && matchesAuthor;
       }) || null,
+
+    customers: (_, args) =>
+      customers.filter((customer) => {
+        if (!args.id && !args.name && !args.email) return false;
+
+        const matchesId = args.id ? customer.id === args.id : true;
+        const matchesTitle = args.name ? customer.name === args.name : true;
+        const matchesAuthor = args.email ? customer.email === args.email : true;
+
+        return matchesId && matchesTitle && matchesAuthor;
+      }) || null,
+
+    customer: (_, args) =>
+      customers.find((customer) => {
+        if (!args.id && !args.name && !args.email) return false;
+
+        const matchesId = args.id ? customer.id === args.id : true;
+        const matchesTitle = args.name ? customer.name === args.name : true;
+        const matchesAuthor = args.email ? customer.email === args.email : true;
+
+        return matchesId && matchesTitle && matchesAuthor;
+      }) || null,
+
     hello: () => "Hello world!",
   },
 };

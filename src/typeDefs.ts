@@ -30,8 +30,10 @@ const typeDefs = gql`
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books(id: ID, title: String, author: String): [Book]
-    hello: String
     book(id: ID, title: String, author: String): Book
+    customers(id: ID, name: String, email: String): [Customer]
+    customer(id: ID, name: String, email: String): Customer
+    hello: String
   }
 `;
 
