@@ -33,6 +33,8 @@ const typeDefs = gql`
     book(id: ID, title: String, author: String): Book
     customers(id: ID, name: String, email: String): [Customer]
     customer(id: ID, name: String, email: String): Customer
+    rentals: [Rental]
+    rental(id: ID): Rental
     hello: String
   }
 `;

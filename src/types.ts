@@ -37,6 +37,8 @@ export type Query = {
   customer?: Maybe<Customer>;
   customers?: Maybe<Array<Maybe<Customer>>>;
   hello?: Maybe<Scalars['String']['output']>;
+  rental?: Maybe<Rental>;
+  rentals?: Maybe<Array<Maybe<Rental>>>;
 };
 
 
@@ -65,6 +67,11 @@ export type QueryCustomersArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryRentalArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type Rental = {
@@ -190,6 +197,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType, Partial<QueryCustomerArgs>>;
   customers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Customer']>>>, ParentType, ContextType, Partial<QueryCustomersArgs>>;
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  rental?: Resolver<Maybe<ResolversTypes['Rental']>, ParentType, ContextType, Partial<QueryRentalArgs>>;
+  rentals?: Resolver<Maybe<Array<Maybe<ResolversTypes['Rental']>>>, ParentType, ContextType>;
 };
 
 export type RentalResolvers<ContextType = any, ParentType extends ResolversParentTypes['Rental'] = ResolversParentTypes['Rental']> = {

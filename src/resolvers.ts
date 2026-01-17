@@ -1,4 +1,4 @@
-import { Resolvers, Book, Customer } from "./types";
+import { Resolvers, Book, Customer, Rental } from "./types";
 
 const books: Book[] = [
   {
@@ -49,6 +49,23 @@ const customers: Customer[] = [
   },
 ];
 
+const rentals: Rental[] = [
+  {
+    id: "1",
+    book: books[0],
+    customer: customers[0],
+    rentalDate: "2024-01-17T10:00:00",
+    returnDate: "2024-01-24T10:00:00",
+  },
+  {
+    id: "2",
+    book: books[1],
+    customer: customers[1],
+    rentalDate: "2024-01-15T14:30:00",
+    returnDate: null,
+  },
+];
+
 const resolvers: Resolvers = {
   Query: {
     books: (_, args) =>
@@ -72,14 +89,12 @@ const resolvers: Resolvers = {
 
     customers: (_, args) =>
       customers.filter((customer) => {
-        if (!args.id && !args.name && !args.email) return false;
-
         const matchesId = args.id ? customer.id === args.id : true;
         const matchesTitle = args.name ? customer.name === args.name : true;
         const matchesAuthor = args.email ? customer.email === args.email : true;
 
         return matchesId && matchesTitle && matchesAuthor;
-      }) || null,
+      }),
 
     customer: (_, args) =>
       customers.find((customer) => {
@@ -92,6 +107,15 @@ const resolvers: Resolvers = {
         return matchesId && matchesTitle && matchesAuthor;
       }) || null,
 
+    rentals: () => rentals,
+    rental: (_, args) =>
+      rentals.find((rental) => {
+        if (!args.id) return false;
+
+        const matchesId = args.id ? rental.id === args.id : true;
+
+        return matchesId;
+      }) || null,
     hello: () => "Hello world!",
   },
 };
