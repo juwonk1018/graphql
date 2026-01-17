@@ -118,6 +118,53 @@ const resolvers: Resolvers = {
       }) || null,
     hello: () => "Hello world!",
   },
+  Mutation: {
+    addBook: (_, args) => {
+      const newBook: Book = {
+        id: String(books.length + 1),
+        title: args.title,
+        author: args.author,
+      };
+      books.push(newBook);
+      return newBook;
+    },
+    addCustomer: (_, args) => {
+      const newCustomer: Customer = {
+        id: String(customers.length + 1),
+        name: args.name,
+        email: args.email,
+        age: args.age,
+      };
+      customers.push(newCustomer);
+      return newCustomer;
+    },
+    createRental: (_, args) => {
+      const book = books.find((b) => b.id === args.bookId);
+      const customer = customers.find((c) => c.id === args.customerId);
+
+      if (!book || !customer) {
+        throw new Error("Book or Customer not found");
+      }
+
+      const newRental: Rental = {
+        id: String(rentals.length + 1),
+        book,
+        customer,
+        rentalDate: new Date().toISOString(),
+        returnDate: null,
+      };
+      rentals.push(newRental);
+      return newRental;
+    },
+    returnBook: (_, args) => {
+      const rental = rentals.find((r) => r.id === args.rentalId);
+      if (!rental) {
+        throw new Error("Rental not found");
+      }
+      rental.returnDate = new Date().toISOString();
+      return rental;
+    },
+  },
 };
 
 export default resolvers;

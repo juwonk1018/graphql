@@ -37,6 +37,12 @@ const typeDefs = gql`
     rental(id: ID): Rental
     hello: String
   }
+  type Mutation {
+    addBook(title: String!, author: String!): Book
+    addCustomer(name: String!, email: String!, age: Int!): Customer
+    createRental(bookId: ID!, customerId: ID!): Rental
+    returnBook(rentalId: ID!): Rental
+  }
 `;
 
 export default typeDefs;

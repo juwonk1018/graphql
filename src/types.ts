@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -28,6 +29,38 @@ export type Customer = {
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  addBook?: Maybe<Book>;
+  addCustomer?: Maybe<Customer>;
+  createRental?: Maybe<Rental>;
+  returnBook?: Maybe<Rental>;
+};
+
+
+export type MutationAddBookArgs = {
+  author: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
+
+export type MutationAddCustomerArgs = {
+  age: Scalars['Int']['input'];
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+
+export type MutationCreateRentalArgs = {
+  bookId: Scalars['ID']['input'];
+  customerId: Scalars['ID']['input'];
+};
+
+
+export type MutationReturnBookArgs = {
+  rentalId: Scalars['ID']['input'];
 };
 
 export type Query = {
@@ -161,6 +194,7 @@ export type ResolversTypes = {
   Customer: ResolverTypeWrapper<Customer>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Rental: ResolverTypeWrapper<Rental>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -173,6 +207,7 @@ export type ResolversParentTypes = {
   Customer: Customer;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  Mutation: Record<PropertyKey, never>;
   Query: Record<PropertyKey, never>;
   Rental: Rental;
   String: Scalars['String']['output'];
@@ -189,6 +224,13 @@ export type CustomerResolvers<ContextType = any, ParentType extends ResolversPar
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<MutationAddBookArgs, 'author' | 'title'>>;
+  addCustomer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType, RequireFields<MutationAddCustomerArgs, 'age' | 'email' | 'name'>>;
+  createRental?: Resolver<Maybe<ResolversTypes['Rental']>, ParentType, ContextType, RequireFields<MutationCreateRentalArgs, 'bookId' | 'customerId'>>;
+  returnBook?: Resolver<Maybe<ResolversTypes['Rental']>, ParentType, ContextType, RequireFields<MutationReturnBookArgs, 'rentalId'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -212,6 +254,7 @@ export type RentalResolvers<ContextType = any, ParentType extends ResolversParen
 export type Resolvers<ContextType = any> = {
   Book?: BookResolvers<ContextType>;
   Customer?: CustomerResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Rental?: RentalResolvers<ContextType>;
 };
