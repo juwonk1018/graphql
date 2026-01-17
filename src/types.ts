@@ -116,6 +116,11 @@ export type Rental = {
   returnDate?: Maybe<Scalars['String']['output']>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  bookReturned?: Maybe<Rental>;
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -198,6 +203,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Rental: ResolverTypeWrapper<Rental>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -211,6 +217,7 @@ export type ResolversParentTypes = {
   Query: Record<PropertyKey, never>;
   Rental: Rental;
   String: Scalars['String']['output'];
+  Subscription: Record<PropertyKey, never>;
 };
 
 export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
@@ -251,11 +258,16 @@ export type RentalResolvers<ContextType = any, ParentType extends ResolversParen
   returnDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  bookReturned?: SubscriptionResolver<Maybe<ResolversTypes['Rental']>, "bookReturned", ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Book?: BookResolvers<ContextType>;
   Customer?: CustomerResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Rental?: RentalResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
 };
 

@@ -1,4 +1,8 @@
+import { PubSub } from "graphql-subscriptions";
 import { Resolvers, Book, Customer, Rental } from "./types";
+
+const pubsub = new PubSub();
+const BOOK_RETURNED = "BOOK_RETURNED";
 
 const books: Book[] = [
   {
@@ -162,7 +166,13 @@ const resolvers: Resolvers = {
         throw new Error("Rental not found");
       }
       rental.returnDate = new Date().toISOString();
+      pubsub.publish(BOOK_RETURNED, { bookReturned: rental });
       return rental;
+    },
+  },
+  Subscription: {
+    bookReturned: {
+      subscribe: () => (pubsub as any).asyncIterator([BOOK_RETURNED]),
     },
   },
 };
