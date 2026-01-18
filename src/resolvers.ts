@@ -150,6 +150,15 @@ const resolvers: Resolvers = {
         throw new Error("Book or Customer not found");
       }
 
+      // 이미 대여 중인 책인지 확인 (반납되지 않은 대여 기록이 있는지 확인)
+      const isBookRented = rentals.some(
+        (r) => r.book?.id === args.bookId && r.returnDate === null,
+      );
+
+      if (isBookRented) {
+        throw new Error("This book is currently rented out.");
+      }
+
       const newRental: Rental = {
         id: String(rentals.length + 1),
         book,
@@ -165,6 +174,12 @@ const resolvers: Resolvers = {
       if (!rental) {
         throw new Error("Rental not found");
       }
+
+      // 이미 반납된 책인지 확인
+      if (rental.returnDate !== null) {
+        throw new Error("This rental has already been returned.");
+      }
+
       rental.returnDate = new Date().toISOString();
       pubsub.publish(BOOK_RETURNED, { bookReturned: rental });
       return rental;
