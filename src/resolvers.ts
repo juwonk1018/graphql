@@ -187,7 +187,7 @@ const resolvers: Resolvers = {
   },
   Subscription: {
     bookReturned: {
-      subscribe: () => (pubsub as any).asyncIterator([BOOK_RETURNED]),
+      subscribe: () => (pubsub as any).asyncIterableIterator([BOOK_RETURNED]),
     },
   },
 };
